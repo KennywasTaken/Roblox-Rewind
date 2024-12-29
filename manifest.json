@@ -1,0 +1,56 @@
+{
+    "manifest_version": 3,
+    "name": "Roblox Rewind",
+    "version": "0.1.0",
+    "description": "A tracker for a user's played Roblox games",
+
+    "background": {
+        "service_worker": "./service-worker.js"
+    },
+
+    "icons": {
+      "48": "./Assets/tempicon48.png",
+      "128": "./Assets/tempicon128.png"
+    },
+
+    "permissions": [
+        "activeTab",
+        "storage",
+        "tabs",
+        "scripting"
+    ],
+
+    "host_permissions": [
+        "https://www.roblox.com/*",
+        "https://thumbnails.roblox.com/*"
+    ],
+
+    "action": {
+        "default_icon": {
+            "48": "./Assets/tempicon48.png",
+            "128": "./Assets/tempicon128.png"          
+        },
+        "default_title": "Roblox Rewind",
+        "default_popup": "popup.html"
+    },
+
+    "content_scripts": [
+        {
+          "js": [
+            "./content.js"
+          ],
+          "matches": [
+            "https://www.roblox.com/*"
+          ]
+        }
+      ],
+
+      "web_accessible_resources": [
+        {
+          "resources": [ "tempicon48.png", "tempicon128.png" ],
+          "matches": [ "https://www.roblox.com/*" ]
+        }
+      ],
+
+    "incognito": "not_allowed"
+  }
