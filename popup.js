@@ -14,28 +14,38 @@ function getPlaceIdFromUrl(url) {
 
 async function currentTabCallback(tabs) {
     const tabURL = tabs[0].url;
-    const gameId = getPlaceIdFromUrl(tabURL)
-    const assetFetchURL = `https://www.roblox.com/item-thumbnails?params=[{assetId:${gameId},imageSize:"small"}]`
+    const placeId = getPlaceIdFromUrl(tabURL)
+    //API endpoint to get the games icon/thumbnail
+    const thumbnailDataFetchURL = `https://www.roblox.com/item-thumbnails?params=[{assetId:${placeId},imageSize:"small"}]`
+    //API endpoint to get more general info on the game
+    const getUniverseIDWithPlaceIDURL = `https://apis.roblox.com/universes/v1/places/${placeId}/universe`
 
-    console.log(`Fetching Image URL...`)
-
-    // Fetch Game Icon
+    // Fetching game icon and setting poopup HTML elements
     try {
-        const response = await fetch(assetFetchURL);
-        const jsonData = await response.json();
-        const thumbnailData = jsonData[0].thumbnailUrl
-        const nameData = jsonData[0].name
+        // Icon/Thumbnail
+        const gameIconResponse = await fetch(thumbnailDataFetchURL);
+        const gameIconJSON = await gameIconResponse.json();
 
-        console.log(jsonData)
+        const thumbnailData = gameIconJSON[0].thumbnailUrl
 
-        if (!response.ok) 
+        // General Info
+        const universeIDResponse = await fetch(getUniverseIDWithPlaceIDURL);
+        const universeIDJSON = await universeIDResponse.json();
+        const universeID = universeIDJSON.universeId;
+
+        const universeDataResponse = await fetch(`https://games.roblox.com/v1/games?universeIds=${universeID}`);
+        const universeJSON = await universeDataResponse.json();
+        console.log(universeJSON)
+        const rootPlaceName = universeJSON.data[0].sourceName
+
+        if (!universeIDResponse.ok) 
         {
-            throw new Error(`Response status: ${response.status}`);
+            throw new Error(`Response status: ${universeIDResponse.status}`);
         }
         else
         {
             gameThumbnail.src = thumbnailData 
-            gameName.innerHTML = nameData
+            gameName.innerHTML = rootPlaceName
         }
     } 
     catch (error) {

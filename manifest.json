@@ -22,7 +22,9 @@
 
     "host_permissions": [
         "https://www.roblox.com/*",
-        "https://thumbnails.roblox.com/*"
+        "https://thumbnails.roblox.com/*",
+        "https://apis.roblox.com/*",
+        "https://games.roblox.com/*"
     ],
 
     "action": {
